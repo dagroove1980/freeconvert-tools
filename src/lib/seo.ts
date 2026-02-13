@@ -27,6 +27,34 @@ export function conversionStructuredData(conversion: ConversionPair) {
   };
 }
 
+export function faqStructuredData(faq: { question: string; answer: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
+}
+
+export function howToStructuredData(name: string, steps: string[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name,
+    step: steps.map((text, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      text,
+    })),
+  };
+}
+
 export function collectionStructuredData(title: string, description: string, url: string) {
   return {
     '@context': 'https://schema.org',

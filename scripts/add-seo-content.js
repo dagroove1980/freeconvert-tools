@@ -1,0 +1,824 @@
+/**
+ * Adds howTo, faq, comparison, and useCases to each conversion in conversions.json
+ */
+const fs = require('fs');
+const path = require('path');
+
+const conversionsPath = path.join(__dirname, '../data/conversions.json');
+const conversions = JSON.parse(fs.readFileSync(conversionsPath, 'utf8'));
+
+// SEO content per conversion id
+const seoContent = {
+  'jpg-to-png': {
+    howTo: [
+      'Select your JPG file by dragging it onto the converter or clicking to browse.',
+      'Click Convert — your image is processed instantly in your browser.',
+      'Download your PNG file. Optionally convert more JPGs in batch.',
+    ],
+    faq: [
+      { question: 'What is the difference between JPG and PNG?', answer: 'JPG uses lossy compression and does not support transparency. PNG uses lossless compression and supports transparent backgrounds, making it ideal for logos and graphics.' },
+      { question: 'Can I convert multiple JPG files at once?', answer: 'Yes. Use batch conversion to convert dozens or hundreds of JPG images to PNG in one go — all processed locally in your browser.' },
+      { question: 'Is JPG to PNG conversion free?', answer: 'Yes. FreeConvert.tools offers unlimited free conversions with no registration, no file size limits, and 100% privacy — your files never leave your device.' },
+      { question: 'Will converting JPG to PNG improve quality?', answer: 'PNG preserves the current pixel data without further lossy compression. It won\'t restore quality lost when the original was saved as JPG, but it prevents future quality loss.' },
+    ],
+    comparison: [
+      { feature: 'Compression', from: 'Lossy (quality degrades on save)', to: 'Lossless (no quality loss)' },
+      { feature: 'Transparency', from: 'No', to: 'Yes (alpha channel)' },
+      { feature: 'File size', from: 'Smaller', to: 'Larger for photos' },
+      { feature: 'Best for', from: 'Photos, web images', to: 'Graphics, logos, screenshots' },
+      { feature: 'Browser support', from: 'Universal', to: 'Universal' },
+    ],
+    useCases: ['Adding transparent backgrounds to photos', 'Editing graphics in tools that prefer PNG', 'Preserving quality when re-saving images', 'Creating logos and icons from photos'],
+  },
+  'png-to-jpg': {
+    howTo: [
+      'Upload your PNG file by dragging it onto the converter or clicking to browse.',
+      'Adjust quality if desired (higher = larger file, better quality).',
+      'Click Convert and download your JPG — ideal for sharing or saving space.',
+    ],
+    faq: [
+      { question: 'Why convert PNG to JPG?', answer: 'JPG files are typically much smaller than PNG for photographic content, making them better for email, web uploads, and storage when transparency is not needed.' },
+      { question: 'Will I lose transparency when converting PNG to JPG?', answer: 'Yes. JPG does not support transparency. Transparent areas become white (or a color you choose). Use JPG only when you don\'t need transparency.' },
+      { question: 'What quality setting should I use for PNG to JPG?', answer: '90% quality is a good balance — nearly indistinguishable from the original for most uses. Use 80% for maximum compression when file size matters.' },
+      { question: 'Can I convert PNG to JPG on my phone?', answer: 'Yes. FreeConvert.tools runs entirely in your browser on any device — iPhone, Android, tablet, or desktop. No app download needed.' },
+    ],
+    comparison: [
+      { feature: 'Compression', from: 'Lossless', to: 'Lossy (adjustable)' },
+      { feature: 'Transparency', from: 'Yes', to: 'No' },
+      { feature: 'File size', from: 'Larger', to: 'Smaller for photos' },
+      { feature: 'Best for', from: 'Graphics, screenshots', to: 'Photos, web images' },
+      { feature: 'Color depth', from: 'Up to 48-bit', to: '24-bit' },
+    ],
+    useCases: ['Reducing file size for email or web', 'Sharing photos on social media', 'Saving storage on devices', 'Preparing images for print workflows'],
+  },
+  'jpg-to-webp': {
+    howTo: [
+      'Drop your JPG file onto the converter or click to select it.',
+      'Click Convert — WebP encoding runs instantly in your browser.',
+      'Download your WebP file, typically 25–35% smaller than the original JPG.',
+    ],
+    faq: [
+      { question: 'Is WebP better than JPG?', answer: 'WebP offers smaller file sizes at similar quality and supports transparency. It is ideal for web use. JPG still has broader compatibility with older software.' },
+      { question: 'Do all browsers support WebP?', answer: 'All modern browsers (Chrome, Firefox, Safari, Edge) support WebP. Support is excellent for web and mobile use.' },
+      { question: 'Will converting JPG to WebP reduce quality?', answer: 'At similar quality settings, WebP often looks identical to JPG while being smaller. You can choose lossless WebP for zero quality loss.' },
+      { question: 'Can I batch convert JPG to WebP?', answer: 'Yes. Convert multiple JPG files to WebP in one session — all processing happens locally with no upload limits.' },
+    ],
+    comparison: [
+      { feature: 'File size', from: 'Baseline', to: '25–35% smaller' },
+      { feature: 'Transparency', from: 'No', to: 'Yes (optional)' },
+      { feature: 'Compression', from: 'Lossy', to: 'Lossy or lossless' },
+      { feature: 'Web support', from: 'Universal', to: 'All modern browsers' },
+      { feature: 'Best for', from: 'General use', to: 'Web optimization' },
+    ],
+    useCases: ['Optimizing website images for faster loading', 'Reducing storage for photo galleries', 'Creating smaller email attachments', 'Improving Core Web Vitals scores'],
+  },
+  'webp-to-jpg': {
+    howTo: [
+      'Select your WebP image by dragging it in or clicking to browse.',
+      'Optionally set output quality. Click Convert.',
+      'Download your JPG — ready for any platform or device.',
+    ],
+    faq: [
+      { question: 'Why convert WebP to JPG?', answer: 'Some apps, social networks, and older software do not support WebP. Converting to JPG ensures maximum compatibility.' },
+      { question: 'Is the conversion lossless?', answer: 'Converting WebP to JPG uses lossy compression, but at high quality settings the difference is minimal for most uses.' },
+      { question: 'Are my files uploaded to a server?', answer: 'No. FreeConvert.tools processes everything in your browser. Your files never leave your device — 100% private.' },
+      { question: 'Can I convert WebP from Google Images to JPG?', answer: 'Yes. If you downloaded a WebP from Google or other sources, you can convert it to JPG for broader compatibility.' },
+    ],
+    comparison: [
+      { feature: 'File size', from: 'Smaller', to: 'Larger' },
+      { feature: 'Compatibility', from: 'Modern browsers', to: 'Universal' },
+      { feature: 'Transparency', from: 'Supported', to: 'Not supported' },
+      { feature: 'Best for', from: 'Web use', to: 'Sharing, legacy software' },
+      { feature: 'Social media', from: 'Varies', to: 'Full support' },
+    ],
+    useCases: ['Uploading to platforms that don\'t support WebP', 'Editing in software that requires JPG', 'Printing or sending to print shops', 'Maximum compatibility for sharing'],
+  },
+  'png-to-webp': {
+    howTo: [
+      'Drag your PNG file onto the converter or click to select.',
+      'Choose lossy (smaller) or lossless (no quality loss). Click Convert.',
+      'Download your WebP — often 25–50% smaller with transparency preserved.',
+    ],
+    faq: [
+      { question: 'Does PNG to WebP preserve transparency?', answer: 'Yes. WebP supports alpha transparency, so PNG images with transparent backgrounds convert cleanly.' },
+      { question: 'Should I use lossy or lossless WebP?', answer: 'Lossless preserves every pixel — ideal for graphics and logos. Lossy gives smaller files — ideal for photos and web images.' },
+      { question: 'How much smaller are WebP files vs PNG?', answer: 'Typically 25–50% smaller for lossy, and often smaller even for lossless WebP compared to PNG.' },
+      { question: 'Is PNG to WebP conversion secure?', answer: 'Yes. All conversion happens in your browser. No files are uploaded to any server — complete privacy.' },
+    ],
+    comparison: [
+      { feature: 'Transparency', from: 'Yes', to: 'Yes' },
+      { feature: 'Compression', from: 'Lossless only', to: 'Lossy or lossless' },
+      { feature: 'File size', from: 'Larger', to: 'Smaller' },
+      { feature: 'Browser support', from: 'Universal', to: 'Modern browsers' },
+      { feature: 'Best for', from: 'Editing, compatibility', to: 'Web optimization' },
+    ],
+    useCases: ['Optimizing website graphics with transparency', 'Reducing PNG file sizes for web', 'Improving page load times', 'Creating smaller image assets'],
+  },
+  'webp-to-png': {
+    howTo: [
+      'Add your WebP file by dragging or clicking to browse.',
+      'Click Convert — processing happens instantly in your browser.',
+      'Download your PNG with full quality and transparency preserved.',
+    ],
+    faq: [
+      { question: 'Why convert WebP to PNG?', answer: 'PNG has universal support in all software. Use PNG when you need guaranteed compatibility or want to edit in tools that don\'t support WebP.' },
+      { question: 'Is WebP to PNG lossless?', answer: 'Yes. The conversion preserves all pixel data. Your PNG will match the quality of the original WebP.' },
+      { question: 'Can I convert WebP from WhatsApp or other apps?', answer: 'Yes. Any WebP file can be converted to PNG, including those from messaging apps and social media.' },
+      { question: 'Does it work offline?', answer: 'After the first load, FreeConvert.tools works offline — all processing runs locally in your browser.' },
+    ],
+    comparison: [
+      { feature: 'File size', from: 'Smaller', to: 'Larger' },
+      { feature: 'Compatibility', from: 'Modern only', to: 'Universal' },
+      { feature: 'Transparency', from: 'Yes', to: 'Yes' },
+      { feature: 'Editing software', from: 'Limited support', to: 'Full support' },
+      { feature: 'Best for', from: 'Web delivery', to: 'Editing, archival' },
+    ],
+    useCases: ['Editing WebP in design software', 'Ensuring compatibility with all systems', 'Archiving images in a universal format', 'Preparing for print workflows'],
+  },
+  'png-to-avif': {
+    howTo: [
+      'Select your PNG file by dragging or clicking to browse.',
+      'Click Convert — AVIF encoding runs in your browser.',
+      'Download your AVIF file with superior compression.',
+    ],
+    faq: [
+      { question: 'What is AVIF?', answer: 'AVIF is a next-generation image format based on AV1 video codec. It offers up to 50% better compression than WebP at similar quality.' },
+      { question: 'Does AVIF support transparency?', answer: 'Yes. AVIF supports alpha transparency, so PNG images with transparent areas convert correctly.' },
+      { question: 'Which browsers support AVIF?', answer: 'Chrome, Firefox, Safari, Edge, and most modern browsers now support AVIF. Support continues to improve.' },
+      { question: 'Is PNG to AVIF conversion free?', answer: 'Yes. Unlimited free conversions, no registration, no file limits — entirely browser-based.' },
+    ],
+    comparison: [
+      { feature: 'Compression', from: 'Lossless', to: '50% better than WebP' },
+      { feature: 'File size', from: 'Larger', to: 'Smaller' },
+      { feature: 'Transparency', from: 'Yes', to: 'Yes' },
+      { feature: 'Browser support', from: 'Universal', to: 'Growing (modern)' },
+      { feature: 'Best for', from: 'Editing', to: 'Web, future-proof' },
+    ],
+    useCases: ['Next-gen web image optimization', 'Maximum compression with transparency', 'Future-proofing image assets', 'Reducing bandwidth usage'],
+  },
+  'avif-to-png': {
+    howTo: [
+      'Drop your AVIF file onto the converter or click to select.',
+      'Click Convert — decoding happens instantly in your browser.',
+      'Download your PNG for universal compatibility.',
+    ],
+    faq: [
+      { question: 'Why convert AVIF to PNG?', answer: 'Some software and platforms do not yet support AVIF. PNG ensures your image works everywhere.' },
+      { question: 'Will I lose quality converting AVIF to PNG?', answer: 'PNG is lossless. You will preserve all visible pixel data from the AVIF at full resolution.' },
+      { question: 'Can I convert AVIF on mobile?', answer: 'Yes. FreeConvert.tools works in any modern browser on phones and tablets.' },
+      { question: 'Are files uploaded?', answer: 'No. All processing is done locally in your browser — your files never leave your device.' },
+    ],
+    comparison: [
+      { feature: 'File size', from: 'Smaller', to: 'Larger' },
+      { feature: 'Compatibility', from: 'Modern browsers', to: 'Universal' },
+      { feature: 'Quality', from: 'Excellent', to: 'Lossless' },
+      { feature: 'Editing support', from: 'Limited', to: 'Full' },
+      { feature: 'Best for', from: 'Web delivery', to: 'Editing, sharing' },
+    ],
+    useCases: ['Using AVIF in unsupported software', 'Sharing with maximum compatibility', 'Editing in design tools', 'Archiving in universal format'],
+  },
+  'webp-to-avif': {
+    howTo: [
+      'Add your WebP file by dragging or clicking to browse.',
+      'Click Convert — AVIF encoding runs in your browser.',
+      'Download your AVIF for even better compression.',
+    ],
+    faq: [
+      { question: 'Why convert WebP to AVIF?', answer: 'AVIF typically offers 20–50% better compression than WebP at similar quality — smaller files with the same visual result.' },
+      { question: 'Does AVIF support transparency like WebP?', answer: 'Yes. AVIF supports alpha transparency. WebP images with transparent backgrounds convert correctly.' },
+      { question: 'Is AVIF widely supported?', answer: 'All major modern browsers support AVIF. Adoption is growing rapidly for web images.' },
+      { question: 'Is the conversion free?', answer: 'Yes. Unlimited free conversions with no registration or file size limits.' },
+    ],
+    comparison: [
+      { feature: 'Compression', from: 'Good', to: 'Better (20–50% smaller)' },
+      { feature: 'Transparency', from: 'Yes', to: 'Yes' },
+      { feature: 'Browser support', from: 'Universal', to: 'Modern browsers' },
+      { feature: 'File size', from: 'Small', to: 'Smaller' },
+      { feature: 'Best for', from: 'Web', to: 'Web (future-proof)' },
+    ],
+    useCases: ['Further optimizing web images', 'Reducing bandwidth costs', 'Future-proofing assets', 'Smallest possible web images'],
+  },
+  'avif-to-webp': {
+    howTo: [
+      'Select your AVIF file by dragging or clicking to browse.',
+      'Click Convert — processing happens in your browser.',
+      'Download your WebP for broader browser support.',
+    ],
+    faq: [
+      { question: 'Why convert AVIF to WebP?', answer: 'WebP has broader support in older browsers and some software. Use WebP when AVIF compatibility is an issue.' },
+      { question: 'Will I lose quality?', answer: 'At high quality settings, the difference is minimal. Both formats are efficient; WebP may be slightly larger.' },
+      { question: 'Which format has better support?', answer: 'WebP is supported by all modern browsers and many image editors. AVIF support is growing but not yet universal.' },
+      { question: 'Can I convert multiple AVIF files?', answer: 'Yes. Batch conversion is supported — process many files in one session.' },
+    ],
+    comparison: [
+      { feature: 'Browser support', from: 'Modern', to: 'Broad' },
+      { feature: 'File size', from: 'Smallest', to: 'Slightly larger' },
+      { feature: 'Transparency', from: 'Yes', to: 'Yes' },
+      { feature: 'Software support', from: 'Growing', to: 'Wide' },
+      { feature: 'Best for', from: 'Cutting-edge web', to: 'Maximum compatibility' },
+    ],
+    useCases: ['Supporting older browsers', 'Using in software without AVIF', 'Maximum compatibility', 'Fallback for AVIF'],
+  },
+  'svg-to-png': {
+    howTo: [
+      'Upload your SVG file by dragging or clicking to browse.',
+      'Choose output resolution (e.g., 512x512, 1024x1024).',
+      'Click Convert and download your PNG at the selected size.',
+    ],
+    faq: [
+      { question: 'What resolution should I use for SVG to PNG?', answer: 'For web: 2x your display size (e.g., 800px for 400px display). For print: 300 DPI equivalent. For icons: 256–512px.' },
+      { question: 'Does SVG to PNG preserve quality?', answer: 'At sufficient resolution, PNG output is sharp and crisp. SVG is vector — scaling up before conversion maintains quality.' },
+      { question: 'Can I convert SVG logos to PNG?', answer: 'Yes. Perfect for creating PNG versions of logos for social media, presentations, and platforms that don\'t support SVG.' },
+      { question: 'Is transparency preserved?', answer: 'Yes. Transparent areas in your SVG remain transparent in the PNG output.' },
+    ],
+    comparison: [
+      { feature: 'Type', from: 'Vector (scalable)', to: 'Raster (pixel-based)' },
+      { feature: 'File size', from: 'Small', to: 'Larger at high res' },
+      { feature: 'Scalability', from: 'Infinite', to: 'Fixed resolution' },
+      { feature: 'Transparency', from: 'Yes', to: 'Yes' },
+      { feature: 'Best for', from: 'Design, web icons', to: 'Sharing, compatibility' },
+    ],
+    useCases: ['Creating social media graphics from logos', 'Generating favicons at multiple sizes', 'Exporting for presentations', 'Using SVG art in non-SVG contexts'],
+  },
+  'png-to-ico': {
+    howTo: [
+      'Select your PNG image (square works best for favicons).',
+      'Click Convert — multi-size ICO (16x16, 32x32, 48x48) is generated.',
+      'Download your ICO file and use it as your website favicon.',
+    ],
+    faq: [
+      { question: 'What sizes are included in the ICO file?', answer: 'The converter creates a multi-size ICO with 16x16, 32x32, and 48x48 pixels — standard favicon sizes.' },
+      { question: 'What image size should my PNG be?', answer: 'At least 48x48 for best results. 256x256 or 512x512 PNG gives the highest quality ICO output.' },
+      { question: 'Can I use PNG with transparency for ICO?', answer: 'Yes. Transparent PNGs convert to ICO with transparency preserved for modern browsers.' },
+      { question: 'Is this free for commercial use?', answer: 'Yes. Unlimited free conversions. No watermarks, no registration, no restrictions.' },
+    ],
+    comparison: [
+      { feature: 'Format', from: 'Single image', to: 'Multi-size icon' },
+      { feature: 'Use', from: 'General graphics', to: 'Favicons, app icons' },
+      { feature: 'Sizes', from: 'One resolution', to: '16, 32, 48px included' },
+      { feature: 'Transparency', from: 'Yes', to: 'Yes' },
+      { feature: 'Best for', from: 'Web images', to: 'Website favicons' },
+    ],
+    useCases: ['Creating website favicons', 'Making app icons for Windows', 'Browser tab icons', 'Bookmark icons'],
+  },
+  'bmp-to-png': {
+    howTo: [
+      'Select your BMP file by dragging or clicking to browse.',
+      'Click Convert — PNG compression runs in your browser.',
+      'Download your PNG with dramatically reduced file size.',
+    ],
+    faq: [
+      { question: 'Why convert BMP to PNG?', answer: 'BMP is uncompressed and creates huge files. PNG compresses without quality loss, often reducing size by 50–90%.' },
+      { question: 'Will I lose quality?', answer: 'No. PNG uses lossless compression. Your image quality stays identical to the BMP.' },
+      { question: 'Where do BMP files come from?', answer: 'BMP is common from Windows screenshots, Paint, scanners, and legacy software. PNG is the modern equivalent.' },
+      { question: 'Are there file size limits?', answer: 'No. FreeConvert.tools handles large BMP files up to 200MB — all processed locally.' },
+    ],
+    comparison: [
+      { feature: 'Compression', from: 'None', to: 'Lossless' },
+      { feature: 'File size', from: 'Very large', to: 'Much smaller' },
+      { feature: 'Transparency', from: 'Limited', to: 'Full support' },
+      { feature: 'Web use', from: 'Rare', to: 'Standard' },
+      { feature: 'Best for', from: 'Legacy Windows', to: 'Modern use' },
+    ],
+    useCases: ['Reducing screenshot file sizes', 'Modernizing legacy image archives', 'Web uploads', 'Email attachments'],
+  },
+  'jpg-to-avif': {
+    howTo: [
+      'Select your JPG file by dragging or clicking to browse.',
+      'Click Convert — AVIF encoding runs in your browser.',
+      'Download your AVIF for maximum compression.',
+    ],
+    faq: [
+      { question: 'How much smaller is AVIF than JPG?', answer: 'Typically 30–50% smaller at similar quality. AVIF is one of the most efficient image formats available.' },
+      { question: 'Does AVIF work for photos?', answer: 'Yes. AVIF excels at photographic content. It often beats JPG and WebP for photo compression.' },
+      { question: 'Which browsers support AVIF?', answer: 'Chrome, Firefox, Safari, and Edge all support AVIF. Support is excellent for modern web use.' },
+      { question: 'Is JPG to AVIF free?', answer: 'Yes. Unlimited conversions, no registration, 100% private — all in your browser.' },
+    ],
+    comparison: [
+      { feature: 'File size', from: 'Baseline', to: '30–50% smaller' },
+      { feature: 'Compression', from: 'Lossy', to: 'Advanced lossy' },
+      { feature: 'Transparency', from: 'No', to: 'Supported' },
+      { feature: 'Browser support', from: 'Universal', to: 'Modern' },
+      { feature: 'Best for', from: 'Universal', to: 'Web optimization' },
+    ],
+    useCases: ['Maximum web image compression', 'Reducing photo storage', 'Faster page loads', 'Future-proof image format'],
+  },
+  'mp4-to-mp3': {
+    howTo: [
+      'Drop your MP4 video file onto the converter or click to browse.',
+      'Click Convert — audio extraction runs in your browser.',
+      'Download your MP3 file. No video upload — 100% private.',
+    ],
+    faq: [
+      { question: 'Does MP4 to MP3 reduce quality?', answer: 'MP3 is lossy. At 320 kbps you get near-CD quality. For most listening, 192–256 kbps is excellent.' },
+      { question: 'Can I extract audio from YouTube downloads?', answer: 'Yes. If you have an MP4 file (from legal sources), you can extract the audio as MP3.' },
+      { question: 'What bitrate should I choose?', answer: '320 kbps for best quality. 192 kbps for a good balance. 128 kbps for smallest files.' },
+      { question: 'Are my files uploaded to a server?', answer: 'No. All processing happens in your browser. Your files never leave your device.' },
+    ],
+    comparison: [
+      { feature: 'Content', from: 'Video + audio', to: 'Audio only' },
+      { feature: 'File size', from: 'Larger', to: 'Much smaller' },
+      { feature: 'Compatibility', from: 'Wide', to: 'Universal' },
+      { feature: 'Best for', from: 'Watching', to: 'Music, podcasts' },
+      { feature: 'Portable players', from: 'Some support', to: 'Full support' },
+    ],
+    useCases: ['Extracting music from videos', 'Creating ringtones', 'Saving podcast audio', 'Portable music files'],
+  },
+  'wav-to-mp3': {
+    howTo: [
+      'Select your WAV file by dragging or clicking to browse.',
+      'Choose bitrate (192–320 kbps recommended). Click Convert.',
+      'Download your MP3 — up to 90% smaller with great quality.',
+    ],
+    faq: [
+      { question: 'How much smaller is MP3 than WAV?', answer: 'Typically 80–90% smaller. A 50MB WAV might become a 5MB MP3 at 320 kbps.' },
+      { question: 'What bitrate for WAV to MP3?', answer: '320 kbps for archival or critical listening. 256 kbps for most uses. 192 kbps for speech or casual listening.' },
+      { question: 'Is WAV to MP3 lossless?', answer: 'No. MP3 is lossy. For lossless compression, use FLAC. For portability and size, MP3 is ideal.' },
+      { question: 'Can I convert WAV from a DAW?', answer: 'Yes. Export your mix as WAV from any DAW, then convert to MP3 for sharing or distribution.' },
+    ],
+    comparison: [
+      { feature: 'Compression', from: 'None (uncompressed)', to: 'Lossy (adjustable)' },
+      { feature: 'File size', from: 'Very large', to: '80–90% smaller' },
+      { feature: 'Editing', from: 'Ideal', to: 'Possible but degraded' },
+      { feature: 'Playback', from: 'Studio quality', to: 'High quality' },
+      { feature: 'Best for', from: 'Production', to: 'Distribution' },
+    ],
+    useCases: ['Sharing music files', 'Reducing storage', 'Portable players', 'Streaming uploads'],
+  },
+  'm4a-to-wav': {
+    howTo: [
+      'Upload your M4A file by dragging or clicking to browse.',
+      'Click Convert — decoding to WAV happens in your browser.',
+      'Download your uncompressed WAV for editing or archival.',
+    ],
+    faq: [
+      { question: 'Why convert M4A to WAV?', answer: 'WAV is uncompressed and universally supported by audio editors, DAWs, and professional software. M4A may not open in all tools.' },
+      { question: 'Will quality improve?', answer: 'M4A is already lossless or high-quality. WAV preserves that — no quality gain, but full compatibility.' },
+      { question: 'Can I convert iPhone voice memos?', answer: 'Yes. Voice memos are often M4A. Convert to WAV for use in editing software.' },
+      { question: 'Is M4A to WAV lossless?', answer: 'If the M4A is lossless (ALAC), yes. If it\'s AAC, you preserve the current quality without further loss.' },
+    ],
+    comparison: [
+      { feature: 'Compression', from: 'AAC or ALAC', to: 'None' },
+      { feature: 'File size', from: 'Smaller', to: 'Larger' },
+      { feature: 'Editing support', from: 'Limited', to: 'Universal' },
+      { feature: 'DAW compatibility', from: 'Varies', to: 'Full' },
+      { feature: 'Best for', from: 'Apple devices', to: 'Production, archival' },
+    ],
+    useCases: ['Editing in Pro Tools or Logic', 'Music production workflows', 'Archiving in universal format', 'Using in video editing'],
+  },
+  'm4a-to-mp3': {
+    howTo: [
+      'Select your M4A file (e.g., from iPhone or iTunes).',
+      'Click Convert — processing runs in your browser.',
+      'Download your MP3 for universal playback everywhere.',
+    ],
+    faq: [
+      { question: 'Why convert M4A to MP3?', answer: 'MP3 plays on virtually every device and software. M4A is common on Apple devices but not always supported elsewhere.' },
+      { question: 'Can I convert Apple Music files?', answer: 'Only if you have the file. DRM-protected Apple Music cannot be converted. Purchased or imported M4A can.' },
+      { question: 'What about voice memos?', answer: 'Yes. iPhone voice memos are often M4A. Convert to MP3 for sharing or use on non-Apple devices.' },
+      { question: 'Is the conversion private?', answer: 'Yes. All processing happens locally in your browser. No files are uploaded.' },
+    ],
+    comparison: [
+      { feature: 'Platform', from: 'Apple-focused', to: 'Universal' },
+      { feature: 'Playback support', from: 'Wide', to: 'Everywhere' },
+      { feature: 'File size', from: 'Similar', to: 'Similar' },
+      { feature: 'Editing tools', from: 'Limited', to: 'Wide' },
+      { feature: 'Best for', from: 'Apple ecosystem', to: 'Sharing, compatibility' },
+    ],
+    useCases: ['Sharing Apple audio files', 'Using on Android or Windows', 'Universal compatibility', 'Editing in non-Apple software'],
+  },
+  'ogg-to-mp3': {
+    howTo: [
+      'Add your OGG file by dragging or clicking to browse.',
+      'Click Convert — processing happens in your browser.',
+      'Download your MP3 for universal playback.',
+    ],
+    faq: [
+      { question: 'Why convert OGG to MP3?', answer: 'OGG Vorbis is common in games and on Linux but less supported on phones and some software. MP3 works everywhere.' },
+      { question: 'Where do OGG files come from?', answer: 'Game audio, Discord recordings, Linux rips, and some streaming. OGG is high quality but not universally supported.' },
+      { question: 'Will I lose quality?', answer: 'Both are lossy. At 192 kbps MP3 or higher, quality is excellent. OGG is efficient; MP3 at 256 kbps is comparable.' },
+      { question: 'Can I convert game music?', answer: 'Yes. Many games use OGG for audio. Convert to MP3 for portable listening.' },
+    ],
+    comparison: [
+      { feature: 'Source', from: 'Games, Linux', to: 'Universal' },
+      { feature: 'Compatibility', from: 'Limited', to: 'Universal' },
+      { feature: 'Quality', from: 'Excellent', to: 'Excellent' },
+      { feature: 'File size', from: 'Small', to: 'Similar' },
+      { feature: 'Best for', from: 'Open source', to: 'Maximum compatibility' },
+    ],
+    useCases: ['Using game audio elsewhere', 'Converting Discord recordings', 'Portable playback', 'Software compatibility'],
+  },
+  'mp3-to-wav': {
+    howTo: [
+      'Select your MP3 file by dragging or clicking to browse.',
+      'Click Convert — decoding runs in your browser.',
+      'Download your WAV for editing or production.',
+    ],
+    faq: [
+      { question: 'Why convert MP3 to WAV?', answer: 'WAV is required or preferred by many DAWs, video editors, and professional tools. It also avoids re-compression when editing.' },
+      { question: 'Will quality improve?', answer: 'No. MP3 is lossy — quality already lost cannot be restored. WAV preserves what the MP3 contains.' },
+      { question: 'What sample rate will the WAV have?', answer: 'Typically 44.1 kHz or 48 kHz, matching the original MP3. The converter preserves the source format.' },
+      { question: 'Can I use WAV in video editing?', answer: 'Yes. WAV is the standard for audio in video editing. Most NLEs prefer WAV over MP3.' },
+    ],
+    comparison: [
+      { feature: 'Compression', from: 'Lossy', to: 'None' },
+      { feature: 'File size', from: 'Small', to: '10x larger' },
+      { feature: 'Editing', from: 'Possible', to: 'Ideal' },
+      { feature: 'DAW compatibility', from: 'Ok', to: 'Preferred' },
+      { feature: 'Best for', from: 'Playback', to: 'Production' },
+    ],
+    useCases: ['Importing into DAWs', 'Video editing workflows', 'Avoiding generation loss', 'Professional audio work'],
+  },
+  'flac-to-mp3': {
+    howTo: [
+      'Select your FLAC file by dragging or clicking to browse.',
+      'Choose bitrate. Click Convert.',
+      'Download your MP3 — 80%+ smaller for portable use.',
+    ],
+    faq: [
+      { question: 'Why convert FLAC to MP3?', answer: 'FLAC is lossless but large. MP3 is smaller and plays everywhere — ideal for phones, cars, and portable devices.' },
+      { question: 'What bitrate for FLAC to MP3?', answer: '320 kbps for best quality. 256 kbps for excellent quality with smaller files. Both are great from FLAC source.' },
+      { question: 'Will I lose quality?', answer: 'Yes — MP3 is lossy. But 320 kbps MP3 from FLAC is very high quality. For archival, keep the FLAC.' },
+      { question: 'Can I batch convert FLAC albums?', answer: 'Yes. Convert entire albums from FLAC to MP3 in one session — all in your browser.' },
+    ],
+    comparison: [
+      { feature: 'Compression', from: 'Lossless', to: 'Lossy' },
+      { feature: 'File size', from: 'Large', to: '80%+ smaller' },
+      { feature: 'Portability', from: 'Limited support', to: 'Universal' },
+      { feature: 'Quality', from: 'Perfect', to: 'Excellent' },
+      { feature: 'Best for', from: 'Archival, hi-fi', to: 'Portable, sharing' },
+    ],
+    useCases: ['Portable music from CD rips', 'Car stereos and phones', 'Reducing storage', 'Maximum compatibility'],
+  },
+  'webm-to-mp3': {
+    howTo: [
+      'Add your WebM file by dragging or clicking to browse.',
+      'Click Convert — audio extraction runs in your browser.',
+      'Download your MP3. Works with YouTube downloads and screen recordings.',
+    ],
+    faq: [
+      { question: 'What is WebM?', answer: 'WebM is a web-oriented video format. Many screen recorders and web videos use WebM. Audio can be extracted to MP3.' },
+      { question: 'Can I extract audio from downloaded videos?', answer: 'Yes. If you have a WebM file from any source, you can extract the audio track as MP3.' },
+      { question: 'Does it work with YouTube downloads?', answer: 'If your WebM file contains audio (e.g., from yt-dlp or similar), yes. Extract to MP3 for easy playback.' },
+      { question: 'Are files uploaded?', answer: 'No. All processing happens in your browser. Your files stay on your device.' },
+    ],
+    comparison: [
+      { feature: 'Content', from: 'Video + audio', to: 'Audio only' },
+      { feature: 'Format', from: 'WebM container', to: 'MP3' },
+      { feature: 'Compatibility', from: 'Browsers', to: 'Universal' },
+      { feature: 'Use', from: 'Web video', to: 'Music, podcasts' },
+      { feature: 'Best for', from: 'Web playback', to: 'Portable audio' },
+    ],
+    useCases: ['Extracting audio from screen recordings', 'Saving web video audio', 'Creating podcasts from videos', 'Portable audio files'],
+  },
+  'mp4-to-webm': {
+    howTo: [
+      'Select your MP4 video by dragging or clicking to browse.',
+      'Click Convert — re-encoding runs in your browser.',
+      'Download your WebM for HTML5 web embedding.',
+    ],
+    faq: [
+      { question: 'Why convert MP4 to WebM?', answer: 'WebM is royalty-free and optimized for web. Many sites use WebM for HTML5 video to reduce bandwidth.' },
+      { question: 'Does WebM support all video codecs?', answer: 'WebM typically uses VP8/VP9. Conversion re-encodes from H.264/HEVC to VP9 for web compatibility.' },
+      { question: 'Which browsers support WebM?', answer: 'Chrome, Firefox, Edge, and Opera fully support WebM. Safari has added support. Great for web use.' },
+      { question: 'Is conversion fast?', answer: 'Depends on file size and device. Processing happens in your browser — no server wait.' },
+    ],
+    comparison: [
+      { feature: 'Licensing', from: 'H.264 patents', to: 'Royalty-free' },
+      { feature: 'Web optimization', from: 'Good', to: 'Excellent' },
+      { feature: 'File size', from: 'Similar', to: 'Often smaller' },
+      { feature: 'HTML5', from: 'Supported', to: 'Native' },
+      { feature: 'Best for', from: 'General use', to: 'Web embedding' },
+    ],
+    useCases: ['Web video embedding', 'Reducing bandwidth', 'Open-source projects', 'HTML5 video'],
+  },
+  'mov-to-mp4': {
+    howTo: [
+      'Drop your MOV file (e.g., from iPhone or Mac) onto the converter.',
+      'Click Convert — processing runs in your browser.',
+      'Download your MP4 for universal playback.',
+    ],
+    faq: [
+      { question: 'Why convert MOV to MP4?', answer: 'MOV is Apple\'s format. MP4 plays everywhere — Windows, Android, smart TVs, and streaming platforms.' },
+      { question: 'Will quality be preserved?', answer: 'Yes. Both use similar codecs. Conversion preserves quality. File size may be similar or smaller.' },
+      { question: 'Can I convert iPhone videos?', answer: 'Yes. iPhone videos are often MOV. Convert to MP4 for sharing on social media or non-Apple devices.' },
+      { question: 'Is it free?', answer: 'Yes. Unlimited conversions, no watermarks, no registration — 100% free.' },
+    ],
+    comparison: [
+      { feature: 'Platform', from: 'Apple', to: 'Universal' },
+      { feature: 'Playback', from: 'Apple, some others', to: 'Everywhere' },
+      { feature: 'Social media', from: 'Varies', to: 'Full support' },
+      { feature: 'Codec', from: 'H.264/HEVC', to: 'H.264/HEVC' },
+      { feature: 'Best for', from: 'Editing on Mac', to: 'Sharing, compatibility' },
+    ],
+    useCases: ['Sharing iPhone videos', 'Uploading to YouTube', 'Playing on non-Apple devices', 'Social media posts'],
+  },
+  'webm-to-mp4': {
+    howTo: [
+      'Select your WebM file by dragging or clicking to browse.',
+      'Click Convert — processing runs in your browser.',
+      'Download your MP4 for universal playback.',
+    ],
+    faq: [
+      { question: 'Why convert WebM to MP4?', answer: 'MP4 plays on virtually every device. WebM is common for web but not supported on many phones, TVs, or older software.' },
+      { question: 'Can I convert screen recordings?', answer: 'Yes. Many browsers save screen recordings as WebM. Convert to MP4 for sharing or editing.' },
+      { question: 'Will file size change?', answer: 'May increase or decrease depending on codecs. MP4 with H.264 is highly compatible and efficient.' },
+      { question: 'Are files uploaded?', answer: 'No. All conversion happens locally in your browser.' },
+    ],
+    comparison: [
+      { feature: 'Compatibility', from: 'Browsers, some apps', to: 'Universal' },
+      { feature: 'Mobile support', from: 'Limited', to: 'Full' },
+      { feature: 'TV, streaming', from: 'Varies', to: 'Full' },
+      { feature: 'Editing', from: 'Limited', to: 'Wide' },
+      { feature: 'Best for', from: 'Web', to: 'Sharing, playback' },
+    ],
+    useCases: ['Sharing web recordings', 'Mobile playback', 'Video editing', 'Maximum compatibility'],
+  },
+  'avi-to-mp4': {
+    howTo: [
+      'Add your AVI file by dragging or clicking to browse.',
+      'Click Convert — modern MP4 encoding runs in your browser.',
+      'Download your MP4 with better compression and compatibility.',
+    ],
+    faq: [
+      { question: 'Why convert AVI to MP4?', answer: 'AVI is old and uncompressed. MP4 is modern, smaller, and plays everywhere. Essential for sharing legacy videos.' },
+      { question: 'How much smaller will the file be?', answer: 'Often 50–80% smaller. AVI uses little compression; MP4 with H.264 is highly efficient.' },
+      { question: 'Will quality improve?', answer: 'At high settings, quality can match or exceed AVI at a fraction of the size.' },
+      { question: 'Can I convert old camcorder videos?', answer: 'Yes. Many old cameras used AVI. Convert to MP4 for modern devices and smaller files.' },
+    ],
+    comparison: [
+      { feature: 'Age', from: 'Legacy (1992)', to: 'Modern (2003+)' },
+      { feature: 'Compression', from: 'Minimal', to: 'Efficient' },
+      { feature: 'File size', from: 'Very large', to: 'Much smaller' },
+      { feature: 'Compatibility', from: 'Declining', to: 'Universal' },
+      { feature: 'Best for', from: 'Legacy', to: 'Everything' },
+    ],
+    useCases: ['Modernizing old videos', 'Reducing file size', 'Sharing legacy footage', 'Streaming compatibility'],
+  },
+  'mp4-to-gif': {
+    howTo: [
+      'Select your MP4 video clip by dragging or clicking to browse.',
+      'Optionally trim and set frame rate. Click Convert.',
+      'Download your animated GIF for memes, reactions, or tutorials.',
+    ],
+    faq: [
+      { question: 'Why convert MP4 to GIF?', answer: 'GIFs play everywhere without a video player — great for memes, docs, Slack, and email.' },
+      { question: 'Will the GIF be large?', answer: 'GIFs are larger than video. Keep clips short (under 10 seconds) and use lower resolution for smaller files.' },
+      { question: 'Can I control quality and size?', answer: 'Yes. Adjust frame rate and resolution. Fewer frames = smaller file. Trade-off between smoothness and size.' },
+      { question: 'Does it support trimming?', answer: 'Yes. Trim your clip before conversion to keep only the part you need.' },
+    ],
+    comparison: [
+      { feature: 'Type', from: 'Video', to: 'Animated image' },
+      { feature: 'Playback', from: 'Video player', to: 'Any image viewer' },
+      { feature: 'File size', from: 'Small', to: 'Larger for same length' },
+      { feature: 'Use', from: 'Watching', to: 'Reactions, memes' },
+      { feature: 'Best for', from: 'Full video', to: 'Short loops' },
+    ],
+    useCases: ['Creating memes', 'Tutorial snippets', 'Slack and Discord reactions', 'Email animations'],
+  },
+  'mov-to-webm': {
+    howTo: [
+      'Select your MOV file by dragging or clicking to browse.',
+      'Click Convert — encoding runs in your browser.',
+      'Download your WebM for web embedding.',
+    ],
+    faq: [
+      { question: 'Why convert MOV to WebM?', answer: 'WebM is optimized for web and HTML5. Useful when embedding Apple videos on websites.' },
+      { question: 'Will quality be preserved?', answer: 'VP9 in WebM offers excellent quality. At similar bitrates, visual quality is comparable to H.264.' },
+      { question: 'Which browsers support WebM?', answer: 'Chrome, Firefox, Edge, Opera. Safari support is improving. Ideal for web-first content.' },
+      { question: 'Is it free?', answer: 'Yes. Unlimited conversions, no registration, no file limits.' },
+    ],
+    comparison: [
+      { feature: 'Platform', from: 'Apple', to: 'Web' },
+      { feature: 'Codec', from: 'H.264/HEVC', to: 'VP8/VP9' },
+      { feature: 'Licensing', from: 'Patent concerns', to: 'Royalty-free' },
+      { feature: 'Use', from: 'Editing, playback', to: 'Web embedding' },
+      { feature: 'Best for', from: 'Apple workflows', to: 'HTML5 video' },
+    ],
+    useCases: ['Web video from iPhone', 'Embedding on websites', 'Open format requirement', 'Reducing bandwidth'],
+  },
+  'mkv-to-mp4': {
+    howTo: [
+      'Select your MKV file by dragging or clicking to browse.',
+      'Click Convert — processing runs in your browser.',
+      'Download your MP4 for universal playback.',
+    ],
+    faq: [
+      { question: 'Why convert MKV to MP4?', answer: 'MKV is common for downloads but many devices (TVs, phones, game consoles) don\'t support it. MP4 plays everywhere.' },
+      { question: 'Will quality be preserved?', answer: 'When possible, the converter preserves quality. Re-encoding may be needed for compatibility.' },
+      { question: 'Can I convert 4K MKV?', answer: 'Yes. Large files are supported. Processing time depends on your device.' },
+      { question: 'Are subtitles preserved?', answer: 'MP4 has limited subtitle support. Complex MKV subtitles may need separate handling.' },
+    ],
+    comparison: [
+      { feature: 'Compatibility', from: 'Media players, PC', to: 'Universal' },
+      { feature: 'Features', from: 'Multiple tracks, subs', to: 'Standard' },
+      { feature: 'TV, phone support', from: 'Limited', to: 'Full' },
+      { feature: 'Container', from: 'Matroska', to: 'MPEG-4' },
+      { feature: 'Best for', from: 'Flexibility', to: 'Compatibility' },
+    ],
+    useCases: ['Playing on smart TVs', 'Phone and tablet playback', 'Streaming devices', 'Maximum compatibility'],
+  },
+  'mp4-to-mov': {
+    howTo: [
+      'Select your MP4 file by dragging or clicking to browse.',
+      'Click Convert — processing runs in your browser.',
+      'Download your MOV for Apple workflows.',
+    ],
+    faq: [
+      { question: 'Why convert MP4 to MOV?', answer: 'Final Cut Pro, iMovie, and other Apple tools sometimes prefer MOV. Useful for Mac-based editing.' },
+      { question: 'Will quality be preserved?', answer: 'Yes. Both can use the same codecs. Conversion preserves quality.' },
+      { question: 'Is MOV better for editing?', answer: 'MOV supports ProRes and other edit-friendly codecs. For H.264 content, MP4 and MOV are similar.' },
+      { question: 'Can I use MOV on Windows?', answer: 'MOV plays on Windows in many apps, but MP4 is more universal. Use MOV when targeting Apple workflows.' },
+    ],
+    comparison: [
+      { feature: 'Platform', from: 'Universal', to: 'Apple-focused' },
+      { feature: 'Editing', from: 'Good', to: 'Preferred on Mac' },
+      { feature: 'Codec support', from: 'Standard', to: 'ProRes, etc.' },
+      { feature: 'Use', from: 'Distribution', to: 'Production' },
+      { feature: 'Best for', from: 'Sharing', to: 'Final Cut, iMovie' },
+    ],
+    useCases: ['Importing into Final Cut Pro', 'iMovie compatibility', 'Apple editing workflows', 'ProRes pipeline'],
+  },
+  'json-to-csv': {
+    howTo: [
+      'Paste your JSON or upload a JSON file.',
+      'The converter auto-detects structure. Click Convert.',
+      'Download your CSV for Excel or Google Sheets.',
+    ],
+    faq: [
+      { question: 'Can it handle nested JSON?', answer: 'Yes. The converter flattens nested objects and arrays into CSV columns. Complex structures may be expanded.' },
+      { question: 'What about JSON arrays?', answer: 'Arrays of objects convert to rows. Each object property becomes a column.' },
+      { question: 'Is it free for large files?', answer: 'Yes. No file size limits. Processing happens in your browser.' },
+      { question: 'Can I use the CSV in Excel?', answer: 'Yes. Output is standard CSV compatible with Excel, Google Sheets, and all spreadsheet software.' },
+    ],
+    comparison: [
+      { feature: 'Format', from: 'Hierarchical', to: 'Tabular' },
+      { feature: 'Use', from: 'APIs, config', to: 'Spreadsheets' },
+      { feature: 'Structure', from: 'Nested', to: 'Flat rows' },
+      { feature: 'Best for', from: 'Data exchange', to: 'Analysis' },
+      { feature: 'Tools', from: 'Code, APIs', to: 'Excel, Sheets' },
+    ],
+    useCases: ['Exporting API data to Excel', 'Data analysis in spreadsheets', 'Sharing with non-technical users', 'Creating reports from JSON'],
+  },
+  'csv-to-json': {
+    howTo: [
+      'Upload your CSV file or paste CSV data.',
+      'The converter auto-detects headers and types. Click Convert.',
+      'Download your JSON for APIs or data processing.',
+    ],
+    faq: [
+      { question: 'Does it auto-detect delimiters?', answer: 'Yes. Handles comma, semicolon, and tab-separated values automatically.' },
+      { question: 'What about CSV with headers?', answer: 'Headers become JSON keys. Each row becomes an object.' },
+      { question: 'Can I convert Excel exports?', answer: 'Yes. Export from Excel as CSV, then convert to JSON. Works with any CSV format.' },
+      { question: 'Is the JSON valid?', answer: 'Yes. Output is standard JSON, ready for APIs or programming.' },
+    ],
+    comparison: [
+      { feature: 'Format', from: 'Tabular', to: 'Hierarchical' },
+      { feature: 'Use', from: 'Spreadsheets', to: 'APIs, code' },
+      { feature: 'Structure', from: 'Flat rows', to: 'Objects, arrays' },
+      { feature: 'Best for', from: 'Analysis', to: 'Development' },
+      { feature: 'Tools', from: 'Excel, Sheets', to: 'APIs, apps' },
+    ],
+    useCases: ['API development', 'Importing spreadsheet data into apps', 'Data pipelines', 'Config from spreadsheets'],
+  },
+  'markdown-to-html': {
+    howTo: [
+      'Paste your Markdown or upload a .md file.',
+      'Click Convert — rendering happens instantly.',
+      'Copy or download clean HTML.',
+    ],
+    faq: [
+      { question: 'Does it support GitHub Flavored Markdown?', answer: 'Yes. Tables, code blocks, task lists, and strikethrough are all supported.' },
+      { question: 'Can I use it for blog posts?', answer: 'Yes. Convert Markdown to HTML for WordPress, static site generators, or custom blogs.' },
+      { question: 'Is the HTML clean?', answer: 'Yes. Output is semantic HTML — headings, lists, links, and code blocks properly tagged.' },
+      { question: 'Does it handle images?', answer: 'Yes. Markdown image syntax converts to HTML img tags. URLs are preserved.' },
+    ],
+    comparison: [
+      { feature: 'Format', from: 'Plain text', to: 'Markup' },
+      { feature: 'Readability', from: 'Human-friendly', to: 'Browser-rendered' },
+      { feature: 'Use', from: 'Writing', to: 'Web pages' },
+      { feature: 'Styling', from: 'Minimal', to: 'Can add CSS' },
+      { feature: 'Best for', from: 'Authors', to: 'Publishing' },
+    ],
+    useCases: ['Blog posts and articles', 'Documentation sites', 'Static site generators', 'Email content'],
+  },
+  'html-to-markdown': {
+    howTo: [
+      'Paste HTML or upload an .html file.',
+      'Click Convert — structure is preserved, styling stripped.',
+      'Copy or download clean Markdown.',
+    ],
+    faq: [
+      { question: 'Does it preserve links and images?', answer: 'Yes. Links and image references convert to Markdown syntax.' },
+      { question: 'What about complex HTML?', answer: 'Tables, lists, and headings convert well. Complex nested divs simplify to structure.' },
+      { question: 'Can I convert web pages?', answer: 'Copy the HTML or use "Save as" — then paste or upload. Works with article content.' },
+      { question: 'Is it free?', answer: 'Yes. Unlimited conversions, no registration, all in your browser.' },
+    ],
+    comparison: [
+      { feature: 'Format', from: 'Markup', to: 'Plain text' },
+      { feature: 'Styling', from: 'CSS, tags', to: 'Minimal' },
+      { feature: 'Use', from: 'Web display', to: 'Writing, docs' },
+      { feature: 'Portability', from: 'Browser', to: 'Any editor' },
+      { feature: 'Best for', from: 'Publishing', to: 'Note-taking, docs' },
+    ],
+    useCases: ['Converting articles to notes', 'Documentation from HTML', 'Simplifying web content', 'Markdown archives'],
+  },
+  'txt-to-pdf': {
+    howTo: [
+      'Paste your text or upload a .txt file.',
+      'Click Convert — PDF is generated with clean typography.',
+      'Download your PDF.',
+    ],
+    faq: [
+      { question: 'Can I use any text file?', answer: 'Yes. Plain text, notes, and code convert to readable PDF with automatic pagination.' },
+      { question: 'Is the PDF formatted?', answer: 'Yes. Clean typography, proper line breaks, and automatic page breaks.' },
+      { question: 'Are files uploaded?', answer: 'No. PDF generation happens entirely in your browser.' },
+      { question: 'Can I convert long documents?', answer: 'Yes. Multi-page PDFs are generated automatically.' },
+    ],
+    comparison: [
+      { feature: 'Format', from: 'Plain text', to: 'Formatted document' },
+      { feature: 'Styling', from: 'None', to: 'Typography' },
+      { feature: 'Sharing', from: 'Basic', to: 'Universal' },
+      { feature: 'Print', from: 'Variable', to: 'Professional' },
+      { feature: 'Best for', from: 'Editing', to: 'Distribution' },
+    ],
+    useCases: ['Creating PDFs from notes', 'Converting code to PDF', 'Sharing documents', 'Print-ready output'],
+  },
+  'csv-to-pdf': {
+    howTo: [
+      'Upload your CSV file or paste CSV data.',
+      'Click Convert — data is formatted as a table in PDF.',
+      'Download your PDF with clean table layout.',
+    ],
+    faq: [
+      { question: 'Does it handle large CSV files?', answer: 'Yes. Tables are paginated automatically. Large datasets convert to multi-page PDFs.' },
+      { question: 'Can I customize the table?', answer: 'The converter applies clean, readable table styling. Columns auto-fit to content.' },
+      { question: 'Is it free?', answer: 'Yes. Unlimited conversions. No registration required.' },
+      { question: 'Does it work with Excel exports?', answer: 'Yes. Export from Excel as CSV, then convert to PDF for sharing.' },
+    ],
+    comparison: [
+      { feature: 'Format', from: 'Tabular data', to: 'Formatted document' },
+      { feature: 'Use', from: 'Editing', to: 'Sharing, print' },
+      { feature: 'Layout', from: 'Spreadsheet', to: 'Fixed pages' },
+      { feature: 'Best for', from: 'Analysis', to: 'Reports' },
+      { feature: 'Compatibility', from: 'Excel', to: 'Universal' },
+    ],
+    useCases: ['Creating reports from data', 'Sharing spreadsheets as PDF', 'Print-ready tables', 'Executive summaries'],
+  },
+  'json-to-pdf': {
+    howTo: [
+      'Paste your JSON or upload a JSON file.',
+      'Click Convert — formatted, readable PDF is generated.',
+      'Download your PDF with syntax-style formatting.',
+    ],
+    faq: [
+      { question: 'Does it handle nested JSON?', answer: 'Yes. Nested objects and arrays are formatted with indentation for readability.' },
+      { question: 'Is there syntax highlighting?', answer: 'Output uses clear formatting — keys, values, and structure are easy to read.' },
+      { question: 'Can I convert API responses?', answer: 'Yes. Paste JSON from any API and convert to PDF for documentation or sharing.' },
+      { question: 'Is it private?', answer: 'Yes. All processing happens in your browser. No data is uploaded.' },
+    ],
+    comparison: [
+      { feature: 'Format', from: 'Structured data', to: 'Readable document' },
+      { feature: 'Use', from: 'APIs, config', to: 'Sharing, docs' },
+      { feature: 'Readability', from: 'For developers', to: 'For anyone' },
+      { feature: 'Best for', from: 'Machine use', to: 'Human sharing' },
+      { feature: 'Print', from: 'No', to: 'Yes' },
+    ],
+    useCases: ['Documenting API responses', 'Sharing config as PDF', 'Creating readable reports', 'Archiving JSON'],
+  },
+  'markdown-to-pdf': {
+    howTo: [
+      'Paste your Markdown or upload a .md file.',
+      'Click Convert — Markdown is rendered to styled PDF.',
+      'Download your PDF with headers, lists, and code blocks.',
+    ],
+    faq: [
+      { question: 'Does it support full Markdown?', answer: 'Yes. Headers, lists, code blocks, tables, and images are all supported.' },
+      { question: 'Can I use it for documentation?', answer: 'Yes. Perfect for README files, docs, and technical documentation.' },
+      { question: 'Is typography clean?', answer: 'Yes. Professional layout with proper spacing and formatting.' },
+      { question: 'Are files uploaded?', answer: 'No. Everything runs in your browser — 100% private.' },
+    ],
+    comparison: [
+      { feature: 'Format', from: 'Plain text', to: 'Formatted document' },
+      { feature: 'Rendering', from: 'Raw', to: 'Styled' },
+      { feature: 'Use', from: 'Writing', to: 'Distribution' },
+      { feature: 'Best for', from: 'Authoring', to: 'Sharing, print' },
+      { feature: 'Compatibility', from: 'Developers', to: 'Universal' },
+    ],
+    useCases: ['README to PDF', 'Documentation distribution', 'Creating reports', 'Print-ready docs'],
+  },
+};
+
+// Add SEO content to each conversion
+for (const conversion of conversions) {
+  const content = seoContent[conversion.id];
+  if (content) {
+    conversion.howTo = content.howTo;
+    conversion.faq = content.faq;
+    conversion.comparison = content.comparison;
+    conversion.useCases = content.useCases;
+  }
+}
+
+fs.writeFileSync(conversionsPath, JSON.stringify(conversions, null, 2), 'utf8');
+console.log(`Added SEO content to ${conversions.length} conversions`);
