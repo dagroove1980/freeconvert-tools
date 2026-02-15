@@ -8,7 +8,7 @@
 
 **Tech Stack:** Next.js 15, React 19, Tailwind CSS v4, TypeScript, lucide-react, @vercel/og, ffmpeg.wasm, react-dropzone, jsPDF, PapaParse, marked, browser-image-compression
 
-**Reference project:** `/Users/david.scebat/Documents/smoothiebar-cards/` — follow all patterns from this project.
+**Reference project:** `/Users/david.scebat/Documents/seo-projects/smoothiebar-cards/` — follow all patterns from this project.
 
 ---
 
@@ -274,7 +274,7 @@ export default function RootLayout({
 
 **Step 8: Install dependencies and verify build**
 
-Run: `cd /Users/david.scebat/Documents/freeconvert-tools && npm install`
+Run: `cd /Users/david.scebat/Documents/seo-projects/freeconvert-tools && npm install`
 Run: `npm run build`
 Expected: Build succeeds (no pages yet, just layout)
 
@@ -2869,7 +2869,7 @@ git commit -m "feat: add Google Search Console verification and AdSense ads.txt"
 
 **Step 1: Install dependencies**
 
-Run: `cd /Users/david.scebat/Documents/freeconvert-tools && npm install`
+Run: `cd /Users/david.scebat/Documents/seo-projects/freeconvert-tools && npm install`
 
 **Step 2: Build**
 
@@ -2900,7 +2900,7 @@ git commit -m "fix: resolve build errors"
 
 **Step 1: Create GitHub repo**
 
-Run: `cd /Users/david.scebat/Documents/freeconvert-tools && gh repo create dagroove1980/freeconvert-tools --public --source=. --push`
+Run: `cd /Users/david.scebat/Documents/seo-projects/freeconvert-tools && gh repo create dagroove1980/freeconvert-tools --public --source=. --push`
 
 **Step 2: Verify on Vercel**
 
