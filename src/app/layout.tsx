@@ -17,18 +17,18 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'FreeConvert.tools — Free Online File Converter',
-    template: '%s | freeconvert.tools',
+    default: 'FreeConvertTool — Free Online File Converter',
+    template: '%s | FreeConvertTool',
   },
   description:
     'Convert files for free, directly in your browser. Image, audio, video, and document conversions — no uploads, no limits, 100% private.',
   metadataBase: new URL(
     process.env.VERCEL_PROJECT_PRODUCTION_URL
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : 'https://freeconvert.tools'
+      : 'https://free-convert-tool.com'
   ),
   openGraph: {
-    siteName: 'freeconvert.tools',
+    siteName: 'FreeConvertTool',
     type: 'website',
     locale: 'en_US',
   },

@@ -1,7 +1,10 @@
 import type { Category } from '@/types/conversion';
 
-export const SITE_NAME = 'freeconvert.tools';
-export const SITE_URL = 'https://freeconvert.tools';
+export const SITE_NAME = 'FreeConvertTool';
+export const SITE_URL =
+  process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.NEXT_PUBLIC_SITE_URL || 'https://free-convert-tool.com';
 export const SITE_DESCRIPTION =
   'Convert files for free, directly in your browser. Image, audio, video, and document conversions — no uploads, no limits, 100% private.';
 

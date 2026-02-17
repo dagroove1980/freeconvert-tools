@@ -28,7 +28,7 @@ export default function Footer() {
         </div>
 
         <div className="text-xs text-tertiary">
-          © {new Date().getFullYear()} freeconvert.tools. Free online file converter — no uploads, no limits, 100% private.
+          © {new Date().getFullYear()} FreeConvertTool. Free online file converter — no uploads, no limits, 100% private.
         </div>
       </div>
     </footer>

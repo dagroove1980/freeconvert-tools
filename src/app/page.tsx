@@ -8,7 +8,7 @@ import { getPopularConversions, getAllConversions } from '@/lib/conversions';
 import { Upload, Zap, Download, Shield, Globe, Lock, MonitorSmartphone, Infinity } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'FreeConvert.tools — Free Online File Converter',
+  title: 'FreeConvertTool — Free Online File Converter',
   description:
     'Convert images, audio, video, and documents for free — directly in your browser. No file uploads, no size limits, no registration. 100% private, works on any device.',
 };
@@ -112,7 +112,7 @@ export default function HomePage() {
 
         {/* Why FreeConvert */}
         <section className="mb-14">
-          <h2 className="font-heading text-xl font-bold text-foreground mb-6 text-center">Why FreeConvert.tools?</h2>
+          <h2 className="font-heading text-xl font-bold text-foreground mb-6 text-center">Why FreeConvertTool?</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="p-5 rounded-[var(--radius-card)] bg-card border border-border">
               <div className="flex items-center gap-3 mb-2">
@@ -147,7 +147,7 @@ export default function HomePage() {
                 <h3 className="font-heading text-sm font-bold text-foreground">Works Everywhere</h3>
               </div>
               <p className="text-xs text-secondary leading-relaxed">
-                Use FreeConvert.tools on any device with a modern browser — Windows, Mac, Linux, iPhone, Android, Chromebook. No app downloads, no plugins, no Java required.
+                Use FreeConvertTool on any device with a modern browser — Windows, Mac, Linux, iPhone, Android, Chromebook. No app downloads, no plugins, no Java required.
               </p>
             </div>
           </div>

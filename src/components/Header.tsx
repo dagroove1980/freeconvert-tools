@@ -10,8 +10,8 @@ export default function Header() {
         <div className="flex items-center justify-between h-14">
           <Link href="/" className="flex items-center gap-1.5">
             <ArrowRightLeft size={20} className="text-accent" />
-            <span className="font-heading text-lg font-bold text-foreground">freeconvert</span>
-            <span className="font-heading text-lg font-bold text-accent">.tools</span>
+            <span className="font-heading text-lg font-bold text-foreground">FreeConvert</span>
+            <span className="font-heading text-lg font-bold text-accent">Tool</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6 text-sm text-secondary">

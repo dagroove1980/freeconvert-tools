@@ -5,7 +5,7 @@ import { ALL_CATEGORIES } from '@/lib/constants';
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : 'https://freeconvert.tools';
+    : 'https://free-convert-tool.com';
 
   const conversions = getAllConversions();
 
