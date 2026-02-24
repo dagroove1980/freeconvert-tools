@@ -3,7 +3,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CategoryCard from '@/components/CategoryCard';
 import ConversionGrid from '@/components/ConversionGrid';
-import { ALL_CATEGORIES } from '@/lib/constants';
+import { SITE_NAME, SITE_URL, SITE_DESCRIPTION, ALL_CATEGORIES } from '@/lib/constants';
 import { getPopularConversions, getAllConversions } from '@/lib/conversions';
 import { Upload, Zap, Download, Shield, Globe, Lock, MonitorSmartphone, Infinity } from 'lucide-react';
 
@@ -13,12 +13,32 @@ export const metadata: Metadata = {
     'Convert images, audio, video, and documents for free — directly in your browser. No file uploads, no size limits, no registration. 100% private, works on any device.',
 };
 
+const websiteStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE_NAME,
+  url: SITE_URL,
+  description: SITE_DESCRIPTION,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${SITE_URL}/?q={search_term_string}`,
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
+
 export default function HomePage() {
   const popular = getPopularConversions();
   const allConversions = getAllConversions();
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteStructuredData) }}
+      />
       <Header />
       <main className="max-w-6xl mx-auto px-4 pt-10 pb-20">
         {/* Hero */}
